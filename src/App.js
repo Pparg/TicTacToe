@@ -7,7 +7,7 @@ import GameMaster from "./Components/GameMaster";
 
 export default function App () {
     let [ game_config, setGameConfig ] = useState({
-        damier : [[ , , ], [ , , ], [ , , ]]
+        damier : [[null,null,null ], [ null, null , null ], [ null, null , null ]]
     })
     let [display , setDisplay] = useState(false)
     let handleSubmit = (players_info) => {
@@ -19,20 +19,15 @@ export default function App () {
             setDisplay(true)
         }
     }
-    let newGame =  () => {
-        setGameConfig({
-            ...game_config,
-            damier : "nouvel array",
-        })
-    }
-
     return (
         <div className="app">
-            {JSON.stringify(game_config)}
-            { display ? 
-            <GameMaster {...game_config} ></GameMaster> : 
+            { display ?
+            <div>
+                <GameMaster {...game_config}></GameMaster>
+                
+            </div> 
+             : 
             <Login handleSubmit={handleSubmit}></Login>}
-            
         </div>
     )
 }
