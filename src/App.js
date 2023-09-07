@@ -11,6 +11,7 @@ export default function App () {
       user_info: null
   })
   let [display , setDisplay] = useState(false)
+
 	useEffect(() => {
 		const storedUserInfo = localStorage.getItem("user_info")
 		if (storedUserInfo){
@@ -23,7 +24,9 @@ export default function App () {
 		}
 	}, [])
   let handleSubmit = (players_info) => {
+      // Check données correct
       if(players_info.p1.name.length>0 && players_info.p2.name.length>0 ){
+          // Update du state GameCofig
           setGameConfig({
               ...game_config,
               user_info:  players_info

@@ -48,10 +48,8 @@ export default function GameMaster ({ ...game_config }) {
         }
     }
     let handleDamier = (id) =>{
-        console.log(id)
         let newArray = [...game_board]
         newArray[id] = current_player.symbol
-        console.log(newArray, 'test')
         setBoard(newArray)
         switcher(current_player.name)
         localStorage.setItem("board", game_board)
@@ -83,11 +81,9 @@ export default function GameMaster ({ ...game_config }) {
             }
         })
         if(game_board.includes(null)){
-            setWinner([])
+            
         }
-    }, [game_board])
-    console.log(winner)
-                  
+    }, [game_board])             
     return(
     
         <div className="board_container">
