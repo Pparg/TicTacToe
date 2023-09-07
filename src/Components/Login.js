@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-
+import './Login.css'
 
 export default function Login ( {handleSubmit} ) {
     let [player, setPlayers] = useState({
@@ -34,12 +34,16 @@ export default function Login ( {handleSubmit} ) {
     } 
     return(
         <>
-            <div>
+            <div className="login_container">
                 <h1>Set players information</h1>
-                <label>Player 1</label>
-                <input type="text" id="p1" value={player.p1.name} onChange={ handleChange } ></input>
-                <label>Player 2</label>
-                <input type='text' id="p2" value={player.p2.name} onChange={ handleChange }></input>
+                <div className="boxes">
+                    <label>Player 1</label>
+                    <input type="text" id="p1" value={player.p1.name} onChange={ handleChange } ></input>
+                </div>
+                <div className="boxes">
+                    <label>Player 2</label>
+                    <input type='text' id="p2" value={player.p2.name} onChange={ handleChange }></input>
+                </div>
                 <button onClick={() => handleSubmit(player)}>Submit</button>
             </div>
         </>

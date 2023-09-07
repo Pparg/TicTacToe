@@ -6,11 +6,17 @@ import Score from './Score'
 
 export default function GameMaster ({ ...game_config }) {
     let [game_board, setBoard] = useState(game_config.damier)
+    let [ winner, setWinner ] = useState("") 
+    let [score, setScore] = useState({
+        p1 : 0,
+        p2 : 0
+    })
     let [current_player , setCurrentPlayer] = useState({
         name: "p1",
-        symbol: "X"
+        symbol: "X",
+        display : game_config.user_info.p1.name
     })
-    let winner = [
+    let winner_moves = [
         [0,1,2],
         [3,4,5],
         [6,7,8],
@@ -26,13 +32,14 @@ export default function GameMaster ({ ...game_config }) {
                 setCurrentPlayer({
                     name: "p2",
                     symbol: "O",
-                    display: ""
+                    display: game_config.user_info.p1.name
                 })
                 break;
             case "p2": 
                 setCurrentPlayer({
                     name: "p1",
-                    symbol: 'X'
+                    symbol: 'X',
+                    display: game_config.user_info.p2.name
                 })
         }
     }
@@ -44,21 +51,27 @@ export default function GameMaster ({ ...game_config }) {
     }
     let newGame =  () => {
         setBoard(Array(9).fill(null))
+        setWinner("")
     }
     useEffect(() => {
-        winner.map((item) => {
+        winner_moves.map((item) => {
             let [ a,b,c ] = item
             if(game_board[a] && game_board[a] === game_board[b] && game_board[a] === game_board[c] ){
-                console.log("glace")
+                setWinner(current_player.name)
             }
         })
+        if(game_board.filter((item)=> item === null).length <1){
+            setWinner([])
+        }
     }, [game_board])
+    console.log(winner)
     return(
+    
         <div className="board_container">
             <h3>Welcome {game_config.user_info.p1.name} & {game_config.user_info.p2.name} </h3>
-            <p>C'est le tour de {current_player.name}</p>
+            {winner === "" ? <p> C'est le tour de {current_player.display}</p> : winner.length<1 ? <p>Tie</p> : <p> {current_player.display} is the winner</p>}
             <div className="board">
-                { game_board.map((item, index) => <Case id={index} fill={item} handleDamier={handleDamier}/>) }
+                { game_board.map((item, index) => <Case key={index} id={index} fill={item} winner={winner} handleDamier={handleDamier}/>) }
             </div>
             <button onClick={newGame}>New Game</button>
         </div>
