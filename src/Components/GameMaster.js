@@ -27,8 +27,10 @@ export default function GameMaster ({ ...game_config }) {
         [2,4,6],
     ]
     let switcher = (item) => {
+        console.log(item, 'switcher')
         switch (item) {
             case "p1":
+                console.log("in 1")
                 setCurrentPlayer({
                     name: "p2",
                     symbol: "O",
@@ -36,35 +38,56 @@ export default function GameMaster ({ ...game_config }) {
                 })
                 break;
             case "p2": 
+                console.log("in 2")
                 setCurrentPlayer({
                     name: "p1",
                     symbol: 'X',
                     display: game_config.user_info.p2.name
                 })
+                break
         }
     }
     let handleDamier = (id) =>{
+        console.log(id)
         let newArray = [...game_board]
         newArray[id] = current_player.symbol
+        console.log(newArray, 'test')
         setBoard(newArray)
         switcher(current_player.name)
+        localStorage.setItem("board", game_board)
     }
     let newGame =  () => {
         setBoard(Array(9).fill(null))
         setWinner("")
+    }
+    let resetGame = () => {
+        localStorage.removeItem("user_info")
+        window.location.reload()
     }
     useEffect(() => {
         winner_moves.map((item) => {
             let [ a,b,c ] = item
             if(game_board[a] && game_board[a] === game_board[b] && game_board[a] === game_board[c] ){
                 setWinner(current_player.name)
+                if(current_player.name === 'p1'){
+                    setScore({
+                        ...score,
+                        p1 : score.p1 + 1
+                    })
+                }else{
+                    setScore({
+                        ...score,
+                        p2: score.p2 + 2
+                    })
+                }
             }
         })
-        if(game_board.filter((item)=> item === null).length <1){
+        if(game_board.includes(null)){
             setWinner([])
         }
     }, [game_board])
     console.log(winner)
+                  
     return(
     
         <div className="board_container">
@@ -73,7 +96,9 @@ export default function GameMaster ({ ...game_config }) {
             <div className="board">
                 { game_board.map((item, index) => <Case key={index} id={index} fill={item} winner={winner} handleDamier={handleDamier}/>) }
             </div>
+            <Score score={score} users={game_config.user_info}></Score>
             <button onClick={newGame}>New Game</button>
+            <button onClick={resetGame}>Reset Game</button>
         </div>
     )
 }
