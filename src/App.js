@@ -1,35 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useState } from "react";
-
 import './app.css'
 import Login from "./Components/Login";
 import GameMaster from "./Components/GameMaster";
+import { Context } from "./Context/context";
 
 export default function App () {
-  let [ game_config, setGameConfig ] = useState({
-      damier : Array(9).fill(null),
-      user_info: null
-  })
+  let { data, setData } = useContext(Context)
   let [display , setDisplay] = useState(false)
-
+  
 	useEffect(() => {
 		const storedUserInfo = localStorage.getItem("user_info")
 		if (storedUserInfo){
 			let user_info = JSON.parse(storedUserInfo)
-			setGameConfig({
-				...game_config,
-				user_info: user_info
-			})
+      setData({
+        ...data,
+        user_info: user_info
+      })
 			setDisplay(true)
 		}
 	}, [])
   let handleSubmit = (players_info) => {
       // Check données correct
       if(players_info.p1.name.length>0 && players_info.p2.name.length>0 ){
-          // Update du state GameCofig
-          setGameConfig({
-              ...game_config,
-              user_info:  players_info
+          setData({
+            ...data,
+            user_info: players_info
           })
           // LOCAL STORAGE 
           localStorage.setItem("user_info", JSON.stringify(players_info))
@@ -37,13 +33,15 @@ export default function App () {
       }
   }
   return (
+    
       <div className="app">
-          <p>{display? "true": 'false'} here</p>
           { display ?
-          <GameMaster {...game_config}></GameMaster>
+          <GameMaster></GameMaster>
             :
           <Login handleSubmit={handleSubmit}></Login>
           }
       </div>
+
+
   )
 }

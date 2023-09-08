@@ -1,11 +1,13 @@
-import React, { useEffect , useState} from "react";
+import React, { useContext ,useEffect , useState} from "react";
 
+import { Context } from "../Context/context";
 import './GameMaster.css'
 import Case from './Case'
 import Score from './Score'
 
-export default function GameMaster ({ ...game_config }) {
-    let [game_board, setBoard] = useState(game_config.damier)
+export default function GameMaster () {
+    let {data, setData} = useContext(Context)
+    let [game_board, setBoard] = useState(data.damier)
     let [ winner, setWinner ] = useState("") 
     let [score, setScore] = useState({
         p1 : 0,
@@ -14,7 +16,7 @@ export default function GameMaster ({ ...game_config }) {
     let [current_player , setCurrentPlayer] = useState({
         name: "p1",
         symbol: "X",
-        display : game_config.user_info.p1.name
+        display : data.user_info.p1.name
     })
     let winner_moves = [
         [0,1,2],
@@ -34,7 +36,7 @@ export default function GameMaster ({ ...game_config }) {
                 setCurrentPlayer({
                     name: "p2",
                     symbol: "O",
-                    display: game_config.user_info.p1.name
+                    display: data.user_info.p1.name
                 })
                 break;
             case "p2": 
@@ -42,7 +44,7 @@ export default function GameMaster ({ ...game_config }) {
                 setCurrentPlayer({
                     name: "p1",
                     symbol: 'X',
-                    display: game_config.user_info.p2.name
+                    display: data.user_info.p2.name
                 })
                 break
         }
@@ -87,12 +89,12 @@ export default function GameMaster ({ ...game_config }) {
     return(
     
         <div className="board_container">
-            <h3>Welcome {game_config.user_info.p1.name} & {game_config.user_info.p2.name} </h3>
+            <h3>Welcome {data.user_info.p1.name} & {data.user_info.p2.name} </h3>
             {winner === "" ? <p> C'est le tour de {current_player.display}</p> : winner.length<1 ? <p>Tie</p> : <p> {current_player.display} is the winner</p>}
             <div className="board">
                 { game_board.map((item, index) => <Case key={index} id={index} fill={item} winner={winner} handleDamier={handleDamier}/>) }
             </div>
-            <Score score={score} users={game_config.user_info}></Score>
+            <Score score={score} users={data.user_info}></Score>
             <button onClick={newGame}>New Game</button>
             <button onClick={resetGame}>Reset Game</button>
         </div>
